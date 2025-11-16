@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asymmetric Key Cryptography | Internet Security Vlog</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #2ecc71;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .logo-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .vlog-container {
+            display: flex;
+            margin-top: 2rem;
+            gap: 2rem;
+        }
+        
+        .main-content {
+            flex: 3;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .sidebar {
+            flex: 1;
+        }
+        
+        .hero-section {
+            background: linear-gradient(45deg, #1a2530, #2c3e50);
+            color: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .hero-description {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .chapter {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .chapter-title {
+            font-size: 1.4rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .chapter-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .demo-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .demo-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .key-visualization {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .key {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        
+        .public-key {
+            background: linear-gradient(135deg, var(--secondary), #2980b9);
+        }
+        
+        .private-key {
+            background: linear-gradient(135deg, var(--accent), #c0392b);
+        }
+        
+        .arrow {
+            font-size: 2rem;
+            color: var(--dark);
+        }
+        
+        .interactive-demo {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            margin: 1.5rem 0;
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        input, textarea, button {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+            border-left: 4px solid var(--success);
+            display: none;
+        }
+        
+        .sidebar-widget {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .widget-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light);
+        }
+        
+        .related-topics li {
+            margin-bottom: 0.8rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .related-topics li:before {
+            content: "▶";
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+        }
+        
+        .key-terms li {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            border-radius: 4px;
+            margin-bottom: 0.8rem;
+        }
+        
+        .term {
+            font-weight: 600;
+            color: var(--secondary);
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .vlog-container {
+                flex-direction: column;
+            }
+            
+            .key-visualization {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">🔒</div>
+                <div>
+                    <h1>Asymmetric Key Cryptography</h1>
+                    <p class="subtitle">Understanding Public and Private Keys in Internet Technology</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="vlog-container">
+            <div class="main-content">
+                <div class="hero-section">
+                    <h2 class="hero-title">How Asymmetric Encryption Secures the Internet</h2>
+                    <p class="hero-description">In this vlog, we explore the fascinating world of asymmetric key cryptography - the technology that powers secure communication online, from HTTPS to digital signatures.</p>
+                </div>
+                
+                <div class="chapter">
+                    <h3 class="chapter-title"><span class="chapter-icon">🔑</span> What is Asymmetric Cryptography?</h3>
+                    <p>Asymmetric cryptography, also known as public-key cryptography, uses two mathematically related keys: a public key and a private key. The public key can be shared with anyone, while the private key must be kept secret.</p>
+                    
+                    <div class="key-visualization">
+                        <div class="key public-key">
+                            Public Key<br>Shared with everyone
+                        </div>
+                        <div class="arrow">⇄</div>
+                        <div class="key private-key">
+                            Private Key<br>Kept secret by owner
+                        </div>
+                    </div>
+                    
+                    <p>When someone wants to send you a secure message, they encrypt it with your public key. Only you can decrypt it with your private key. This ensures confidentiality even over insecure channels.</p>
+                </div>
+                
+                <div class="chapter">
+                    <h3 class="chapter-title"><span class="chapter-icon">🌐</span> Real-World Applications</h3>
+                    <p>Asymmetric cryptography is the foundation of many internet technologies:</p>
+                    <ul>
+                        <li><strong>HTTPS/SSL/TLS:</strong> Secures web browsing by establishing encrypted connections</li>
+                        <li><strong>Digital Signatures:</strong> Verifies the authenticity and integrity of digital documents</li>
+                        <li><strong>Email Encryption (PGP/GPG):</strong> Protects email content from unauthorized access</li>
+                        <li><strong>SSH:</strong> Secures remote server access</li>
+                        <li><strong>Cryptocurrencies:</strong> Enables secure transactions on blockchain networks</li>
+                    </ul>
+                    
+                    <div class="demo-section">
+                        <h4 class="demo-title">How HTTPS Uses Asymmetric Cryptography</h4>
+                        <p>When you visit a secure website (HTTPS), your browser and the server use asymmetric cryptography to:</p>
+                        <ol>
+                            <li>Authenticate the server's identity using digital certificates</li>
+                            <li>Exchange a symmetric session key securely</li>
+                            <li>Establish an encrypted connection for the browsing session</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="chapter">
+                    <h3 class="chapter-title"><span class="chapter-icon">⚡</span> Interactive Demo</h3>
+                    <p>Try this simplified demonstration of asymmetric encryption. Enter a message to see how it would be encrypted and decrypted using public and private keys.</p>
+                    
+                    <div class="interactive-demo">
+                        <div class="input-group">
+                            <label for="originalMessage">Original Message:</label>
+                            <textarea id="originalMessage" placeholder="Enter a message to encrypt">Hello, secure world!</textarea>
+                        </div>
+                        
+                        <button id="encryptBtn">Encrypt with Public Key</button>
+                        
+                        <div class="input-group">
+                            <label for="encryptedMessage">Encrypted Message:</label>
+                            <textarea id="encryptedMessage" readonly></textarea>
+                        </div>
+                        
+                        <button id="decryptBtn">Decrypt with Private Key</button>
+                        
+                        <div class="input-group">
+                            <label for="decryptedMessage">Decrypted Message:</label>
+                            <textarea id="decryptedMessage" readonly></textarea>
+                        </div>
+                        
+                        <div class="result" id="demoResult">
+                            <strong>Note:</strong> This is a simplified simulation. Real asymmetric encryption uses complex mathematical algorithms like RSA or ECC.
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chapter">
+                    <h3 class="chapter-title"><span class="chapter-icon">🔍</span> Key Concepts Explained</h3>
+                    
+                    <div class="demo-section">
+                        <h4 class="demo-title">Public Key Infrastructure (PKI)</h4>
+                        <p>PKI is a framework that manages digital certificates and public-key encryption. It consists of:</p>
+                        <ul>
+                            <li><strong>Certificate Authorities (CAs):</strong> Trusted entities that issue digital certificates</li>
+                            <li><strong>Digital Certificates:</strong> Electronic documents that bind public keys to identities</li>
+                            <li><strong>Registration Authorities:</strong> Verify the identity of certificate requesters</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="demo-section">
+                        <h4 class="demo-title">Digital Signatures</h4>
+                        <p>Digital signatures use asymmetric cryptography to:</p>
+                        <ol>
+                            <li>Create a hash of the document</li>
+                            <li>Encrypt the hash with the sender's private key</li>
+                            <li>Attach the encrypted hash to the document</li>
+                            <li>The recipient decrypts the hash with the sender's public key and verifies it matches the document's hash</li>
+                        </ol>
+                        <p>This ensures authenticity (the sender is who they claim to be) and integrity (the document hasn't been altered).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="sidebar">
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Related Topics</h3>
+                    <ul class="related-topics">
+                        <li>Symmetric vs Asymmetric Encryption</li>
+                        <li>RSA Algorithm Deep Dive</li>
+                        <li>Elliptic Curve Cryptography</li>
+                        <li>Quantum Computing & Cryptography</li>
+                        <li>Blockchain Security Principles</li>
+                        <li>Zero-Knowledge Proofs</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Key Terms</h3>
+                    <ul class="key-terms">
+                        <li><span class="term">Public Key</span> - A cryptographic key that can be shared publicly and is used to encrypt data or verify signatures</li>
+                        <li><span class="term">Private Key</span> - A secret key that must be protected and is used to decrypt data or create signatures</li>
+                        <li><span class="term">Digital Certificate</span> - An electronic document that proves the ownership of a public key</li>
+                        <li><span class="term">Encryption</span> - The process of converting plaintext into ciphertext</li>
+                        <li><span class="term">Decryption</span> - The process of converting ciphertext back into plaintext</li>
+                    </ul>
+                </div>
+                
+                <div class="sidebar-widget">
+                    <h3 class="widget-title">Resources</h3>
+                    <ul class="related-topics">
+                        <li>Cryptography Textbook Recommendations</li>
+                        <li>OpenSSL Tutorials</li>
+                        <li>Let's Encrypt - Free SSL Certificates</li>
+                        <li>OWASP Cryptography Cheat Sheet</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Asymmetric Key Cryptography Vlog | Understanding Internet Security</p>
+            <p>This is an educational demonstration of asymmetric cryptography concepts.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Interactive demo functionality
+            const encryptBtn = document.getElementById('encryptBtn');
+            const decryptBtn = document.getElementById('decryptBtn');
+            const originalMessage = document.getElementById('originalMessage');
+            const encryptedMessage = document.getElementById('encryptedMessage');
+            const decryptedMessage = document.getElementById('decryptedMessage');
+            const demoResult = document.getElementById('demoResult');
+            
+            encryptBtn.addEventListener('click', function() {
+                const message = originalMessage.value;
+                if (message.trim() === '') {
+                    alert('Please enter a message to encrypt');
+                    return;
+                }
+                
+                // Simulate encryption - in reality this would use complex algorithms
+                const encrypted = btoa(message).split('').reverse().join('');
+                encryptedMessage.value = encrypted;
+                decryptedMessage.value = '';
+                demoResult.style.display = 'block';
+            });
+            
+            decryptBtn.addEventListener('click', function() {
+                const encrypted = encryptedMessage.value;
+                if (encrypted.trim() === '') {
+                    alert('Please encrypt a message first');
+                    return;
+                }
+                
+                // Simulate decryption
+                const decrypted = atob(encrypted.split('').reverse().join(''));
+                decryptedMessage.value = decrypted;
+            });
+            
+            // Add some animation to the keys
+            const keys = document.querySelectorAll('.key');
+            keys.forEach(key => {
+                key.addEventListener('mouseover', function() {
+                    this.style.transform = 'scale(1.1)';
+                });
+                
+                key.addEventListener('mouseout', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
